@@ -27,29 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-// These test will use as a DB whatever the application is configured to use. See application.properties
-public class StudentControllerIntegrationTests_TestcontainerlMySQL {
+public class StudentControllerIntegrationTests_TestcontainerlMySQL extends TestcontainersMySqlAbstraction {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private StudentRepository studentRepository;
-    @Container
-    private static MySQLContainer MY_SQL_CONTAINER;
-    static {
-        MY_SQL_CONTAINER = new MySQLContainer("mysql:latest")
-                .withDatabaseName("foo")
-                .withUsername("foo")
-                .withPassword("secret");
-        MY_SQL_CONTAINER.start();
-    }
-    @DynamicPropertySource
-    public static void dynamicPropertySource(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", MY_SQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", MY_SQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", MY_SQL_CONTAINER::getPassword);
-    }
 
     private Student student;
     @BeforeEach
